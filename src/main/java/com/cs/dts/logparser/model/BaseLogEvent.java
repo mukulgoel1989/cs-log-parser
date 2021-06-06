@@ -13,7 +13,7 @@ public abstract class BaseLogEvent {
     @JsonProperty("id")
     private String id;
     @JsonProperty("state")
-    private String state;
+    private EventState state;
     @JsonProperty("timestamp")
     private long timestamp;
 }

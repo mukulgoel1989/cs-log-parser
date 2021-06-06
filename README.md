@@ -1,0 +1,1 @@
+a simple spring boot application that takes in a log file, parses, collates and saves the events to a file based hsqldb

@@ -3,6 +3,7 @@ package com.cs.dts.logparser.service;
 import com.cs.dts.logparser.entity.EventDetails;
 import com.cs.dts.logparser.model.ApplicationServerLog;
 import com.cs.dts.logparser.model.BaseLogEvent;
+import com.cs.dts.logparser.model.EventState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +43,7 @@ public class LogFileParserService {
         for (BaseLogEvent entry : baseEntries) {
             if (eventDetailsMap.containsKey(entry.getId())) {
                 EventDetails eventDetail;
-                if (entry.getState().equals("FINISHED")) {
+                if (entry.getState().equals(EventState.FINISHED)) {
                     eventDetail = updateEventDetailWithFinishedEvent(eventDetailsMap, entry);
                 } else {
                     eventDetail = updateEventDetailWithStartEvent(eventDetailsMap, entry);

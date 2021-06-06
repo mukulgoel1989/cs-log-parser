@@ -13,7 +13,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class ApplicationServerLog extends BaseLogEvent {
     @JsonProperty("type")
-    private String type;
+    private EventType type;
     @JsonProperty("host")
     private String host;
 

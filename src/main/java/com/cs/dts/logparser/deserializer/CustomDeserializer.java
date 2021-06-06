@@ -4,7 +4,6 @@ import com.cs.dts.logparser.model.ApplicationServerLog;
 import com.cs.dts.logparser.model.BaseLogEvent;
 import com.cs.dts.logparser.model.ServerLog;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -17,7 +16,7 @@ public class CustomDeserializer extends StdDeserializer<BaseLogEvent> {
     }
 
     @Override
-    public BaseLogEvent deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public BaseLogEvent deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         TreeNode node = jsonParser.readValueAsTree();
 
         if (node.get("type") != null) {

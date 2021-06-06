@@ -2,9 +2,7 @@ package com.cs.dts.logparser.service;
 
 import com.cs.dts.logparser.entity.EventDetails;
 import com.cs.dts.logparser.exception.InvalidDataException;
-import com.cs.dts.logparser.model.ApplicationServerLog;
-import com.cs.dts.logparser.model.BaseLogEvent;
-import com.cs.dts.logparser.model.ServerLog;
+import com.cs.dts.logparser.model.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,32 +45,32 @@ public class LogParserServiceTest {
         ServerLog serverLog = new ServerLog();
         serverLog.setId("id1");
         serverLog.setTimestamp(1234);
-        serverLog.setState("STARTED");
+        serverLog.setState(EventState.STARTED);
 
         baseLogEvents.add(serverLog);
 
         serverLog = new ServerLog();
         serverLog.setId("id1");
         serverLog.setTimestamp(1237);
-        serverLog.setState("FINISHED");
+        serverLog.setState(EventState.FINISHED);
 
         baseLogEvents.add(serverLog);
 
         ApplicationServerLog applicationServerLog = new ApplicationServerLog();
         applicationServerLog.setId("id2");
         applicationServerLog.setTimestamp(1239);
-        applicationServerLog.setState("FINISHED");
+        applicationServerLog.setState(EventState.FINISHED);
         applicationServerLog.setHost("host");
-        applicationServerLog.setType("APPLICATION_LOG");
+        applicationServerLog.setType(EventType.APPLICATION_LOG);
 
         baseLogEvents.add(applicationServerLog);
 
         applicationServerLog = new ApplicationServerLog();
         applicationServerLog.setId("id2");
         applicationServerLog.setTimestamp(1230);
-        applicationServerLog.setState("STARTED");
+        applicationServerLog.setState(EventState.STARTED);
         applicationServerLog.setHost("host");
-        applicationServerLog.setType("APPLICATION_LOG");
+        applicationServerLog.setType(EventType.APPLICATION_LOG);
         baseLogEvents.add(applicationServerLog);
 
         Mockito.when(fileReaderService.getEventObjectsFromFile(Paths.get(logFilePath))).thenReturn(baseLogEvents);
@@ -84,7 +82,7 @@ public class LogParserServiceTest {
 
 
         EventDetails detailB = EventDetails.builder().eventId("id2")
-                .type("APPLICATION_LOG")
+                .type(EventType.APPLICATION_LOG)
                 .host("host")
                 .eventDuration(9l)
                 .alert(true).build();

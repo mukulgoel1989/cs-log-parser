@@ -1,9 +1,7 @@
 package com.cs.dts.logparser.service;
 
 import com.cs.dts.logparser.exception.InvalidDataException;
-import com.cs.dts.logparser.model.ApplicationServerLog;
-import com.cs.dts.logparser.model.BaseLogEvent;
-import com.cs.dts.logparser.model.ServerLog;
+import com.cs.dts.logparser.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -61,18 +59,18 @@ public class FileReaderServiceTest {
 
         ApplicationServerLog applicationServerLog = new ApplicationServerLog();
         applicationServerLog.setId("scsmbstgra");
-        applicationServerLog.setType("APPLICATION_LOG");
+        applicationServerLog.setType(EventType.APPLICATION_LOG);
         applicationServerLog.setTimestamp(1491377495212l);
-        applicationServerLog.setState("STARTED");
+        applicationServerLog.setState(EventState.STARTED);
         applicationServerLog.setHost("12345");
 
         baseLogEvents.add(applicationServerLog);
 
         applicationServerLog = new ApplicationServerLog();
         applicationServerLog.setId("scsmbstgra");
-        applicationServerLog.setType("APPLICATION_LOG");
+        applicationServerLog.setType(EventType.APPLICATION_LOG);
         applicationServerLog.setTimestamp(1491377495217L);
-        applicationServerLog.setState("FINISHED");
+        applicationServerLog.setState(EventState.FINISHED);
         applicationServerLog.setHost("12345");
 
         baseLogEvents.add(applicationServerLog);
@@ -80,28 +78,28 @@ public class FileReaderServiceTest {
         ServerLog serverLog = new ServerLog();
         serverLog.setId("scsmbstgrb");
         serverLog.setTimestamp(1491377495213l);
-        serverLog.setState("STARTED");
+        serverLog.setState(EventState.STARTED);
 
         baseLogEvents.add(serverLog);
 
         serverLog = new ServerLog();
         serverLog.setId("scsmbstgrb");
         serverLog.setTimestamp(1491377495216L);
-        serverLog.setState("FINISHED");
+        serverLog.setState(EventState.FINISHED);
 
         baseLogEvents.add(serverLog);
 
         serverLog = new ServerLog();
         serverLog.setId("scsmbstgrc");
         serverLog.setTimestamp(1491377495218L);
-        serverLog.setState("FINISHED");
+        serverLog.setState(EventState.FINISHED);
 
         baseLogEvents.add(serverLog);
 
         serverLog = new ServerLog();
         serverLog.setId("scsmbstgrc");
         serverLog.setTimestamp(1491377495210L);
-        serverLog.setState("STARTED");
+        serverLog.setState(EventState.STARTED);
 
         baseLogEvents.add(serverLog);
 
