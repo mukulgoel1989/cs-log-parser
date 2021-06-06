@@ -8,6 +8,7 @@ a simple spring boot application that takes in a log file, parses, collates and 
 
 ## Notes
 
+* Application developed and tested with JDK8
 * Note the pathToLogFile parameter is mandatory. This can be either absolute or relative path to file
 * The application will start and read log file from provided path. If a valid file is found, the application will parse
   the log events and save EventDetails to a file based HSQL database. The database file is configured to be
