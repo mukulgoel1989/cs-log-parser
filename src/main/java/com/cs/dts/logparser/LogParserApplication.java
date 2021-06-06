@@ -40,7 +40,6 @@ public class LogParserApplication implements CommandLineRunner {
         } catch (InvalidDataException e) {
             log.error("Exception occurred during program execution. Program will exit now", e);
             context.close();
-            System.exit(-1);
         }
     }
 

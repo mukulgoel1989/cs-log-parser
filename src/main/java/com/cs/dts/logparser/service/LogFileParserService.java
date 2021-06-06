@@ -5,30 +5,26 @@ import com.cs.dts.logparser.model.ApplicationServerLog;
 import com.cs.dts.logparser.model.BaseLogEvent;
 import com.cs.dts.logparser.model.EventState;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
 public class LogFileParserService {
 
-    @Value(("${app.alert.threshold}"))
     private Long alertThreshold;
-
-    @Value("${app.logfile.path}")
     private String logFilePath;
-
-    @Autowired
     private FileReaderService fileReaderService;
 
+    public LogFileParserService(@Value(("${app.alert.threshold}")) Long alertThreshold, @Value("${app.logfile.path}") String logFilePath, FileReaderService fileReaderService) {
+        this.alertThreshold = Objects.requireNonNull(alertThreshold, "value cannot be null");
+        this.logFilePath = Objects.requireNonNull(logFilePath, "logfile path cannot be null");
+        this.fileReaderService = Objects.requireNonNull(fileReaderService, "object cannot be null");
+    }
 
     public List<EventDetails> parseLogFileForEventDetails() {
         Path file = Paths.get(logFilePath);

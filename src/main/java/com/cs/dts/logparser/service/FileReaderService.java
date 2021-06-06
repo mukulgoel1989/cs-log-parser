@@ -5,7 +5,6 @@ import com.cs.dts.logparser.model.BaseLogEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,14 +13,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
 @Slf4j
 public class FileReaderService {
 
-    @Autowired
     private ObjectMapper mapper;
+
+    public FileReaderService(ObjectMapper mapper) {
+        this.mapper = Objects.requireNonNull(mapper, "mapper is required and cannot be null");
+    }
 
     public List<BaseLogEvent> getEventObjectsFromFile(Path file) {
         List<BaseLogEvent> logEventEntries = new ArrayList<>();

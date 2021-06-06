@@ -7,11 +7,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,15 +24,12 @@ public class LogParserServiceTest {
 
     @Mock
     FileReaderService fileReaderService;
-    @InjectMocks
     LogFileParserService logFileParserService;
 
 
     @BeforeEach
     public void setup() {
-
-        ReflectionTestUtils.setField(logFileParserService, "alertThreshold", 3L);
-        ReflectionTestUtils.setField(logFileParserService, "logFilePath", logFilePath);
+        logFileParserService = new LogFileParserService(3l, logFilePath, fileReaderService);
     }
 
     @Test
