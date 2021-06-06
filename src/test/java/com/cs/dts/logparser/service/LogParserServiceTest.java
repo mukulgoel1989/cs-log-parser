@@ -1,6 +1,6 @@
 package com.cs.dts.logparser.service;
 
-import com.cs.dts.logparser.entity.EventDetails;
+import com.cs.dts.logparser.entity.EventDetail;
 import com.cs.dts.logparser.exception.InvalidDataException;
 import com.cs.dts.logparser.model.*;
 import org.assertj.core.api.Assertions;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class LogParserServiceTest {
+class LogParserServiceTest {
 
     private final String logFilePath = "src/test/resources/logfile.txt";
 
@@ -33,7 +33,7 @@ public class LogParserServiceTest {
     }
 
     @Test
-    public void testLogParserServiceSuccessScenario() throws IOException {
+    void testLogParserServiceSuccessScenario() throws IOException {
 
         List<BaseLogEvent> baseLogEvents = new ArrayList<>();
 
@@ -71,24 +71,24 @@ public class LogParserServiceTest {
         Mockito.when(fileReaderService.getEventObjectsFromFile(Paths.get(logFilePath))).thenReturn(baseLogEvents);
 
 
-        EventDetails detailA = EventDetails.builder().eventId("id1")
+        EventDetail detailA = EventDetail.builder().eventId("id1")
                 .eventDuration(3l)
                 .alert(false).build();
 
 
-        EventDetails detailB = EventDetails.builder().eventId("id2")
+        EventDetail detailB = EventDetail.builder().eventId("id2")
                 .type(EventType.APPLICATION_LOG)
                 .host("host")
                 .eventDuration(9l)
                 .alert(true).build();
 
-        List<EventDetails> eventDetailsList = logFileParserService.parseLogFileForEventDetails();
+        List<EventDetail> eventDetailList = logFileParserService.parseLogFileForEventDetails();
 
-        Assertions.assertThat(eventDetailsList).contains(detailA, detailB);
+        Assertions.assertThat(eventDetailList).contains(detailA, detailB);
     }
 
     @Test
-    public void testLogParserServiceFileNotFound() {
+    void testLogParserServiceFileNotFound() {
         Path actualPath = Paths.get(logFilePath);
         Mockito.when(fileReaderService.getEventObjectsFromFile(actualPath)).thenThrow(new InvalidDataException("Exception when trying to read from file at path"));
         org.junit.jupiter.api.Assertions.assertThrows(InvalidDataException.class, () -> {

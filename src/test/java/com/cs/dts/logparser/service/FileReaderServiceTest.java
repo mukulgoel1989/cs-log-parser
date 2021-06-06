@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class FileReaderServiceTest {
+class FileReaderServiceTest {
 
     private final List<String> TEST_DATA_VALID = Arrays.asList("{\"id\":\"scsmbstgra\", \"state\":\"STARTED\", \"type\":\"APPLICATION_LOG\", \"host\":\"12345\", \"timestamp\":1491377495212}\n" +
             "{\"id\":\"scsmbstgrb\", \"state\":\"STARTED\", \"timestamp\":1491377495213}\n" +
@@ -49,7 +49,7 @@ public class FileReaderServiceTest {
 
 
     @Test
-    public void testGetEventObjectsFromFileSuccess() throws IOException {
+    void testGetEventObjectsFromFileSuccess() throws IOException {
 
         File tempLogFile = new File(testLogFileDir, "logfile.txt");
 
@@ -112,23 +112,25 @@ public class FileReaderServiceTest {
     }
 
     @Test
-    public void testGetEventObjectsFromFileWithReadFalse() throws IOException {
+    void testGetEventObjectsFromFileWithReadFalse() throws IOException {
         File tempLogFile = new File(testLogFileDir, "logfile.txt");
         Files.write(tempLogFile.toPath(), TEST_DATA_VALID);
         tempLogFile.setReadable(false);
+        Path tempFilePath = tempLogFile.toPath();
 
         InvalidDataException thrown = org.junit.jupiter.api.Assertions.assertThrows(InvalidDataException.class, () -> {
-            fileReaderService.getEventObjectsFromFile(tempLogFile.toPath());
+            fileReaderService.getEventObjectsFromFile(tempFilePath);
         });
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().contains("Exception when trying to read from file at path"));
     }
 
     @Test
-    public void testGetEventObjectsFromFileWithInvalidJsonData() throws IOException {
+    void testGetEventObjectsFromFileWithInvalidJsonData() throws IOException {
         File tempLogFile = new File(testLogFileDir, "logfile-invalid.txt");
         Files.write(tempLogFile.toPath(), TEST_DATA_INVALID);
+        Path tempFilePath = tempLogFile.toPath();
         InvalidDataException thrown = org.junit.jupiter.api.Assertions.assertThrows(InvalidDataException.class, () -> {
-            fileReaderService.getEventObjectsFromFile(tempLogFile.toPath());
+            fileReaderService.getEventObjectsFromFile(tempFilePath);
         });
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().contains("Invalid data format found in log file in line"));
     }
