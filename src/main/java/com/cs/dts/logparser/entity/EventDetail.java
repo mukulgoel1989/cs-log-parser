@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "event_details")
-public class EventDetails {
+public class EventDetail {
 
     @Id
     private String eventId;

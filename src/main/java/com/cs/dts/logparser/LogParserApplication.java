@@ -1,6 +1,6 @@
 package com.cs.dts.logparser;
 
-import com.cs.dts.logparser.entity.EventDetails;
+import com.cs.dts.logparser.entity.EventDetail;
 import com.cs.dts.logparser.exception.InvalidDataException;
 import com.cs.dts.logparser.repository.EventDetailRepository;
 import com.cs.dts.logparser.service.LogFileParserService;
@@ -34,9 +34,9 @@ public class LogParserApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            List<EventDetails> eventDetailsList = logFileParserService.parseLogFileForEventDetails();
-            log.debug("Event detail objects being persisted {}", Arrays.toString(eventDetailsList.toArray()));
-            eventDetailRepository.saveAll(eventDetailsList);
+            List<EventDetail> eventDetailList = logFileParserService.parseLogFileForEventDetails();
+            log.debug("Event detail objects being persisted {}", Arrays.toString(eventDetailList.toArray()));
+            eventDetailRepository.saveAll(eventDetailList);
         } catch (InvalidDataException e) {
             log.error("Exception occurred during program execution. Program will exit now", e);
             context.close();

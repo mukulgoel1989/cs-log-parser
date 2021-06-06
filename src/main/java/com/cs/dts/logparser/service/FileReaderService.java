@@ -42,6 +42,7 @@ public class FileReaderService {
         BaseLogEvent event = null;
         try {
             event = mapper.readValue(line, BaseLogEvent.class);
+            log.debug("line {} converted to object {}", line, event);
         } catch (JsonProcessingException e) {
             throw new InvalidDataException(String.format("Invalid data format found in log file in line %s", line), e);
         }

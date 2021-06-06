@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @EqualsAndHashCode
+@ToString(callSuper = true)
 public class ApplicationServerLog extends BaseLogEvent {
     @JsonProperty("type")
     private EventType type;

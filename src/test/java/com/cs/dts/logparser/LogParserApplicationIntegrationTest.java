@@ -1,6 +1,6 @@
 package com.cs.dts.logparser;
 
-import com.cs.dts.logparser.entity.EventDetails;
+import com.cs.dts.logparser.entity.EventDetail;
 import com.cs.dts.logparser.model.EventType;
 import com.cs.dts.logparser.repository.EventDetailRepository;
 import org.assertj.core.api.Assertions;
@@ -20,23 +20,23 @@ class LogParserApplicationIntegrationTest {
     @Test
     void testSuccessRunValidateInMemoryDatabase() throws Exception {
 
-        List<EventDetails> eventDetailsList = (List<EventDetails>) eventDetailRepository.findAll();
+        List<EventDetail> eventDetailList = (List<EventDetail>) eventDetailRepository.findAll();
 
-        EventDetails detailA = EventDetails.builder().eventId("scsmbstgrmg")
+        EventDetail detailA = EventDetail.builder().eventId("scsmbstgrmg")
                 .type(EventType.APPLICATION_LOG)
                 .host("12345")
                 .eventDuration(5l)
                 .alert(true).build();
 
-        EventDetails detailB = EventDetails.builder().eventId("scsmbstgrb")
+        EventDetail detailB = EventDetail.builder().eventId("scsmbstgrb")
                 .eventDuration(3l)
                 .alert(false).build();
 
-        EventDetails detailC = EventDetails.builder().eventId("scsmbstgrc")
+        EventDetail detailC = EventDetail.builder().eventId("scsmbstgrc")
                 .eventDuration(8l)
                 .alert(true).build();
 
-        Assertions.assertThat(eventDetailsList).contains(detailA, detailB, detailC);
+        Assertions.assertThat(eventDetailList).contains(detailA, detailB, detailC);
 
     }
 

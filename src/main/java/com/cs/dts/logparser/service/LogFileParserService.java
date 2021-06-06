@@ -1,6 +1,6 @@
 package com.cs.dts.logparser.service;
 
-import com.cs.dts.logparser.entity.EventDetails;
+import com.cs.dts.logparser.entity.EventDetail;
 import com.cs.dts.logparser.model.ApplicationServerLog;
 import com.cs.dts.logparser.model.BaseLogEvent;
 import com.cs.dts.logparser.model.EventState;
@@ -20,44 +20,48 @@ public class LogFileParserService {
     private String logFilePath;
     private FileReaderService fileReaderService;
 
-    public LogFileParserService(@Value(("${app.alert.threshold}")) Long alertThreshold, @Value("${app.logfile.path}") String logFilePath, FileReaderService fileReaderService) {
+    public LogFileParserService(@Value(("${app.alert.threshold.milliseconds}")) Long alertThreshold, @Value("${app.logfile.path}") String logFilePath, FileReaderService fileReaderService) {
         this.alertThreshold = Objects.requireNonNull(alertThreshold, "value cannot be null");
         this.logFilePath = Objects.requireNonNull(logFilePath, "logfile path cannot be null");
         this.fileReaderService = Objects.requireNonNull(fileReaderService, "object cannot be null");
     }
 
-    public List<EventDetails> parseLogFileForEventDetails() {
+    public List<EventDetail> parseLogFileForEventDetails() {
+        log.info("Log file parser application is configured to alert for events that took more than {}ms and is started with log file path = {}", alertThreshold, logFilePath);
         Path file = Paths.get(logFilePath);
         List<BaseLogEvent> baseEntries = fileReaderService.getEventObjectsFromFile(file);
-        return buildEntityFromObjects(baseEntries);
+        log.debug("Raw Log events from file {}", Arrays.toString(baseEntries.toArray()));
+        return buildEventDetailsFromLogEntries(baseEntries);
     }
 
-    private List<EventDetails> buildEntityFromObjects(List<BaseLogEvent> baseEntries) {
-
-        Map<String, EventDetails> eventDetailsMap = new HashMap<>();
-
+    private List<EventDetail> buildEventDetailsFromLogEntries(List<BaseLogEvent> baseEntries) {
+        Map<String, EventDetail> eventDetailsMap = new HashMap<>();
         for (BaseLogEvent entry : baseEntries) {
-            if (eventDetailsMap.containsKey(entry.getId())) {
-                EventDetails eventDetail;
-                if (entry.getState().equals(EventState.FINISHED)) {
-                    eventDetail = updateEventDetailWithFinishedEvent(eventDetailsMap, entry);
-                } else {
-                    eventDetail = updateEventDetailWithStartEvent(eventDetailsMap, entry);
-                }
-                if (eventDetail.getEventDuration() > alertThreshold) {
-                    eventDetail.setAlert(true);
-                    log.warn("Alert threshold exceeded for event detail with id {}", eventDetail.getEventId());
-                }
-            } else {
-                EventDetails eventDetail = prepareEventDetailForEntry(entry);
-                eventDetailsMap.put(entry.getId(), eventDetail);
-            }
+            processLogEntryForEventDetail(eventDetailsMap, entry);
         }
         return new ArrayList<>(eventDetailsMap.values());
     }
 
-    private EventDetails prepareEventDetailForEntry(BaseLogEvent entry) {
-        EventDetails.EventDetailsBuilder eventDetailBuilder = EventDetails.builder()
+    private void processLogEntryForEventDetail(Map<String, EventDetail> eventDetailsMap, BaseLogEvent entry) {
+        if (eventDetailsMap.containsKey(entry.getId())) {
+            EventDetail eventDetail;
+            if (entry.getState().equals(EventState.FINISHED)) {
+                eventDetail = updateEventDetailWithFinishedEvent(eventDetailsMap, entry);
+            } else {
+                eventDetail = updateEventDetailWithStartEvent(eventDetailsMap, entry);
+            }
+            if (eventDetail.getEventDuration() > alertThreshold) {
+                eventDetail.setAlert(true);
+                log.warn("Alert threshold of {}ms exceeded for event detail with id {}", alertThreshold, eventDetail.getEventId());
+            }
+        } else {
+            EventDetail eventDetail = prepareEventDetailForEntry(entry);
+            eventDetailsMap.put(entry.getId(), eventDetail);
+        }
+    }
+
+    private EventDetail prepareEventDetailForEntry(BaseLogEvent entry) {
+        EventDetail.EventDetailBuilder eventDetailBuilder = EventDetail.builder()
                 .eventId(entry.getId())
                 .eventDuration(entry.getTimestamp())
                 .alert(false);
@@ -69,15 +73,15 @@ public class LogFileParserService {
         return eventDetailBuilder.build();
     }
 
-    private EventDetails updateEventDetailWithStartEvent(Map<String, EventDetails> eventDetailsMap, BaseLogEvent entry) {
-        EventDetails eventDetail;
+    private EventDetail updateEventDetailWithStartEvent(Map<String, EventDetail> eventDetailsMap, BaseLogEvent entry) {
+        EventDetail eventDetail;
         eventDetail = eventDetailsMap.get(entry.getId());
         eventDetail.setEventDuration(eventDetail.getEventDuration() - entry.getTimestamp());
         return eventDetail;
     }
 
-    private EventDetails updateEventDetailWithFinishedEvent(Map<String, EventDetails> eventDetailsMap, BaseLogEvent entry) {
-        EventDetails eventDetail;
+    private EventDetail updateEventDetailWithFinishedEvent(Map<String, EventDetail> eventDetailsMap, BaseLogEvent entry) {
+        EventDetail eventDetail;
         eventDetail = eventDetailsMap.get(entry.getId());
         eventDetail.setEventDuration(entry.getTimestamp() - eventDetail.getEventDuration());
         return eventDetail;
